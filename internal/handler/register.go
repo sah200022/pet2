@@ -15,6 +15,11 @@ type RegisterResponse struct {
 	Message string `json:"message"`
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type AuthHandler struct {
 	authService *service.AuthService
 }
@@ -43,11 +48,41 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 	err := h.authService.Register(req.Email, req.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": err.Error(),
+		})
 		return
 	}
 
-	resp := RegisterResponse{
-		Message: "Success",
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{
+		"status": "create success",
+	})
+}
+
+func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
 	}
-	json.NewEncoder(w).Encode(resp)
+	w.Header().Set("Content-Type", "application/json")
+
+	var login LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&login); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("JSON Decode Error"))
+		return
+	}
+
+	err := h.authService.Login(login.Email, login.Password)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": err.Error(),
+		})
+		return
+	}
+	json.NewEncoder(w).Encode(map[string]string{
+		"status": "login success",
+	})
 }

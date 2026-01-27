@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="65fab758-9309-416c-8494-1259f05b7bce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/handler/register.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/repository/user_repository.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../awesomeProject/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/auth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/auth/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/handler/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handler/register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/service/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,22 +27,23 @@
   <component name="GOROOT" url="file:///usr/local/go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "sah200022"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;sah200022&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:sah200022/pet2.git",
-    "accountId": "6ad35e30-481d-4798-b824-43cf24e7d9d8"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:sah200022/pet2.git&quot;,
+    &quot;accountId&quot;: &quot;6ad35e30-481d-4798-b824-43cf24e7d9d8&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="38kq9HYfwW8v2aoowhJIN64wZKW" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -48,6 +53,7 @@
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
     "Go Build.go build PetProject/cmd.executor": "Run",
+    "Go Build.go build PetProject/cmd/auth.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
@@ -69,7 +75,7 @@
       <recent name="$PROJECT_DIR$/cmd" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build PetProject/cmd/auth">
     <configuration name="go build PetProject/cmd" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="PetProject" />
       <working_directory value="$PROJECT_DIR$" />
@@ -79,8 +85,18 @@
       <filePath value="$PROJECT_DIR$/cmd/main.go" />
       <method v="2" />
     </configuration>
+    <configuration name="go build PetProject/cmd/auth" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="PetProject" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="PetProject/cmd/auth" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/auth/main.go" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build PetProject/cmd/auth" />
         <item itemvalue="Go Build.go build PetProject/cmd" />
       </list>
     </recent_temporary>
