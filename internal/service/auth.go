@@ -3,7 +3,11 @@ package service
 import (
 	"PetProject/internal/repository"
 	"errors"
+	"github.com/golang-jwt/jwt/v5"
+	"time"
 )
+
+var jwtSecret = []byte("secret jwt key")
 
 type AuthService struct {
 	userRepo *repository.UserRepository
@@ -34,18 +38,33 @@ func (s *AuthService) Register(email, password string) error {
 	return err
 }
 
-func (s *AuthService) Login(email, password string) error {
+func (s *AuthService) Login(email, password string) (string, error) {
 	if email == "" || password == "" {
-		return errors.New("email or password is empty")
+		return "", errors.New("email or password is empty")
 	}
 
 	user, err := s.userRepo.GetMail(email)
 	if err != nil {
-		return errors.New("email not found")
+		return "", errors.New("email not found")
 	}
 
 	if user.Password != password {
-		return errors.New("incorrect password")
+		return "", errors.New("incorrect password")
 	}
-	return nil
+
+	token, err := s.GenerateToken(email)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func (s *AuthService) GenerateToken(email string) (string, error) {
+	claims := jwt.MapClaims{
+		"email": email,
+		"exp":   time.Now().Add(time.Minute * 15).Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(jwtSecret)
 }

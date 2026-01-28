@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="65fab758-9309-416c-8494-1259f05b7bce" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/repository/user_repository.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/middleware/jwt_middleware.go" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../awesomeProject/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/auth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/auth/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/handler/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/handler/register.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/service/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/service/auth.go" afterDir="false" />
     </list>
