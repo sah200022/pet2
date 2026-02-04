@@ -28,7 +28,7 @@ func (a *ArticleRepository) Create(article *Article) (Article, error) {
 }
 
 // Найти статью по id
-func (a *ArticleRepository) Get(id int) (Article, error) {
+func (a *ArticleRepository) GetID(id int) (Article, error) {
 	article, ok := a.articles[id]
 	if !ok {
 		return Article{}, errors.New("article not found")
