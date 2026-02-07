@@ -2,6 +2,7 @@ package handler
 
 import (
 	"PetProject/internal/articles/service"
+	"PetProject/internal/middleware"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -39,7 +40,7 @@ func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Json Decode Error"))
 		return
 	}
-	author, ok := r.Context().Value("email").(string)
+	author, ok := r.Context().Value(middleware.ContextKeyEmail).(string)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte("Unauthorized"))

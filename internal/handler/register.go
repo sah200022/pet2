@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"PetProject/internal/middleware"
 	"PetProject/internal/service"
 	"encoding/json"
 	"net/http"
@@ -90,7 +91,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) Me(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	email, ok := r.Context().Value("email").(string)
+	email, ok := r.Context().Value(middleware.ContextKeyEmail).(string)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
 		return

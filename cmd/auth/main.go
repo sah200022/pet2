@@ -26,7 +26,7 @@ func main() {
 	mux.HandleFunc("/register", authHandler.Register)
 	mux.HandleFunc("/login", authHandler.Login)
 	mux.Handle("/me", middleware.JWTMiddleware(http.HandlerFunc(authHandler.Me)))
-	mux.HandleFunc("/article/create", articleHandler.Create)
+	mux.Handle("/article/create", middleware.JWTMiddleware(http.HandlerFunc(articleHandler.Create)))
 	mux.HandleFunc("/articles", articleHandler.GetAll)
 	mux.HandleFunc("/articles/", articleHandler.GetID)
 

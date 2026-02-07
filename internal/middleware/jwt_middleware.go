@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"strings"
@@ -9,9 +10,7 @@ import (
 
 var jwtSecret = []byte("secret jwt key")
 
-type contextKey string
-
-const contextKeyEmail contextKey = "email"
+var ContextKeyEmail = contextKey("email")
 
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +20,7 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 {
+		if len(parts) != 2 || parts[0] != "Bearer" {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
@@ -34,9 +33,14 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		claims := token.Claims.(jwt.MapClaims)
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		fmt.Println("Authorization header", r.Header.Get("Authorization"))
 		email := claims["email"].(string)
-		ctx := context.WithValue(r.Context(), contextKeyEmail, email)
+		ctx := context.WithValue(r.Context(), ContextKeyEmail, email)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
