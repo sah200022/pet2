@@ -1,0 +1,24 @@
+package database
+
+import (
+	"context"
+	"fmt"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
+
+func NewPostgresPool() (*pgxpool.Pool, error) {
+	ctx := context.Background()
+	connURL := "postgres://postgres:123@localhost:5432/petproject"
+
+	pool, err := pgxpool.New(ctx, connURL)
+	if err != nil {
+		return nil, err
+	}
+
+	err = pool.Ping(ctx)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("Successfully connected to DB")
+	return pool, nil
+}
