@@ -1,6 +1,9 @@
 package repository
 
-import "errors"
+import (
+	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type Article struct {
 	ID     int    `json:"id"`
@@ -10,12 +13,12 @@ type Article struct {
 }
 
 type ArticleRepository struct {
-	articles map[int]*Article
+	db *pgxpool.Pool
 }
 
-func NewArticleRepository() *ArticleRepository {
+func NewArticleRepository(db *pgxpool.Pool) *ArticleRepository {
 	return &ArticleRepository{
-		articles: make(map[int]*Article),
+		db: db,
 	}
 }
 
@@ -23,24 +26,62 @@ func NewArticleRepository() *ArticleRepository {
 
 // Создание записи
 func (a *ArticleRepository) Create(article *Article) (Article, error) {
-	a.articles[article.ID] = article
+	query := `
+	INSERT INTO articles (title, text, author)
+	VALUES ($1, $2, $3)
+	RETURNING id;
+`
+	var articleId int
+	err := a.db.QueryRow(context.Background(), query, article.Title, article.Text, article.Author).Scan(&articleId)
+	if err != nil {
+		return Article{}, err
+	}
+	article.ID = articleId
 	return *article, nil
 }
 
 // Найти статью по id
 func (a *ArticleRepository) GetID(id int) (Article, error) {
-	article, ok := a.articles[id]
-	if !ok {
-		return Article{}, errors.New("article not found")
+	query := `
+	SELECT id, title, text, author
+	FROM articles
+	WHERE id = $1;
+`
+	var article Article
+	err := a.db.QueryRow(context.Background(), query, id).Scan(
+		&article.ID, &article.Title, &article.Text, &article.Author,
+	)
+	if err != nil {
+		return Article{}, err
 	}
-	return *article, nil
+	return article, nil
 }
 
 // показать все статьи
 func (a *ArticleRepository) GetAll() ([]Article, error) {
+	query := `
+	SELECT id, title, text, author
+	FROM articles;
+`
+	rows, err := a.db.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 	var articles []Article
-	for _, article := range a.articles {
-		articles = append(articles, *article)
+	for rows.Next() {
+		var article Article
+		err := rows.Scan(
+			&article.ID, &article.Title, &article.Text, &article.Author,
+		)
+		if err != nil {
+			return nil, err
+		}
+		articles = append(articles, article)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 	return articles, nil
+
 }

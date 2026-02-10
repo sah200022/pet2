@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="65fab758-9309-416c-8494-1259f05b7bce" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/../awesomeProject/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/articles/repository/articles_repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/articles/repository/articles_repo.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +56,7 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "postgres",
+    "git-widget-placeholder": "sql",
     "go.import.settings.migrated": "true",
     "last_opened_file_path": "/Users/sahautdinov",
     "node.js.detected.package.eslint": "true",
