@@ -28,7 +28,7 @@ func main() {
 	authService := service.NewAuthService(userRepo)
 	authHandler := handler.NewAuthHandler(authService)
 
-	articleRepo := repository2.NewArticleRepository()
+	articleRepo := repository2.NewArticleRepository(dbPool)
 	articleService := service2.NewArticleService(articleRepo)
 	articleHandler := handler2.NewArticleHandler(articleService)
 
