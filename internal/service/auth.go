@@ -52,7 +52,7 @@ func (s *AuthService) Login(email, password string) (string, error) {
 		return "", errors.New("incorrect password")
 	}
 
-	token, err := s.GenerateToken(email)
+	token, err := s.GenerateToken(user.ID)
 	if err != nil {
 		return "", err
 	}
@@ -60,10 +60,10 @@ func (s *AuthService) Login(email, password string) (string, error) {
 	return token, nil
 }
 
-func (s *AuthService) GenerateToken(email string) (string, error) {
+func (s *AuthService) GenerateToken(userID int) (string, error) {
 	claims := jwt.MapClaims{
-		"email": email,
-		"exp":   time.Now().Add(time.Minute * 15).Unix(),
+		"user_id": userID,
+		"exp":     time.Now().Add(time.Minute * 15).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtSecret)

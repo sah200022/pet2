@@ -10,7 +10,7 @@ import (
 
 var jwtSecret = []byte("secret jwt key")
 
-var ContextKeyEmail = contextKey("email")
+var ContextKeyUserID = contextKey("user_id")
 
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -39,8 +39,8 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 		fmt.Println("Authorization header", r.Header.Get("Authorization"))
-		email := claims["email"].(string)
-		ctx := context.WithValue(r.Context(), ContextKeyEmail, email)
+		userID := int(claims["user_id"].(float64))
+		ctx := context.WithValue(r.Context(), ContextKeyUserID, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

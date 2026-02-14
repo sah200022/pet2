@@ -40,13 +40,13 @@ func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Json Decode Error"))
 		return
 	}
-	author, ok := r.Context().Value(middleware.ContextKeyEmail).(string)
+	userID, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte("Unauthorized"))
 		return
 	}
-	err := h.articleService.Create(article.Title, article.Text, author)
+	err := h.articleService.Create(article.Title, article.Text, userID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{
@@ -60,6 +60,7 @@ func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -76,6 +77,8 @@ func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -96,7 +99,6 @@ func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Not Found"))
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(article)
 
 }

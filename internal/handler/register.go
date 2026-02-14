@@ -5,6 +5,7 @@ import (
 	"PetProject/internal/service"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 type RegisterRequest struct {
@@ -91,12 +92,12 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) Me(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	email, ok := r.Context().Value(middleware.ContextKeyEmail).(string)
+	user_id, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{
-		"email": email,
+		"UserID": strconv.Itoa(user_id),
 	})
 }

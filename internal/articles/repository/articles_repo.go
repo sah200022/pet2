@@ -6,10 +6,10 @@ import (
 )
 
 type Article struct {
-	ID     int    `json:"id"`
-	Title  string `json:"title"`
-	Text   string `json:"text"`
-	Author string `json:"author"`
+	ID       int    `json:"id"`
+	Title    string `json:"title"`
+	Text     string `json:"text"`
+	AuthorID int    `json:"author_id"`
 }
 
 type ArticleRepository struct {
@@ -27,12 +27,12 @@ func NewArticleRepository(db *pgxpool.Pool) *ArticleRepository {
 // Создание записи
 func (a *ArticleRepository) Create(article *Article) (Article, error) {
 	query := `
-	INSERT INTO articles (title, text, author)
+	INSERT INTO articles (title, text, author_id)
 	VALUES ($1, $2, $3)
 	RETURNING id;
 `
 	var articleId int
-	err := a.db.QueryRow(context.Background(), query, article.Title, article.Text, article.Author).Scan(&articleId)
+	err := a.db.QueryRow(context.Background(), query, article.Title, article.Text, article.AuthorID).Scan(&articleId)
 	if err != nil {
 		return Article{}, err
 	}
@@ -43,13 +43,13 @@ func (a *ArticleRepository) Create(article *Article) (Article, error) {
 // Найти статью по id
 func (a *ArticleRepository) GetID(id int) (Article, error) {
 	query := `
-	SELECT id, title, text, author
+	SELECT id, title, text, author_id
 	FROM articles
 	WHERE id = $1;
 `
 	var article Article
 	err := a.db.QueryRow(context.Background(), query, id).Scan(
-		&article.ID, &article.Title, &article.Text, &article.Author,
+		&article.ID, &article.Title, &article.Text, &article.AuthorID,
 	)
 	if err != nil {
 		return Article{}, err
@@ -60,7 +60,7 @@ func (a *ArticleRepository) GetID(id int) (Article, error) {
 // показать все статьи
 func (a *ArticleRepository) GetAll() ([]Article, error) {
 	query := `
-	SELECT id, title, text, author
+	SELECT id, title, text, author_id
 	FROM articles;
 `
 	rows, err := a.db.Query(context.Background(), query)
@@ -72,7 +72,7 @@ func (a *ArticleRepository) GetAll() ([]Article, error) {
 	for rows.Next() {
 		var article Article
 		err := rows.Scan(
-			&article.ID, &article.Title, &article.Text, &article.Author,
+			&article.ID, &article.Title, &article.Text, &article.AuthorID,
 		)
 		if err != nil {
 			return nil, err

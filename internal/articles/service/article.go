@@ -16,14 +16,14 @@ func NewArticleService(articleRepo *repository.ArticleRepository) *ArticleServic
 }
 
 // создание статьи
-func (a *ArticleService) Create(title string, text string, author string) error {
+func (a *ArticleService) Create(title string, text string, userID int) error {
 	if title == "" || text == "" {
 		return errors.New("title or text is empty")
 	}
 	article := repository.Article{
-		Title:  title,
-		Text:   text,
-		Author: author,
+		Title:    title,
+		Text:     text,
+		AuthorID: userID,
 	}
 	_, err := a.articleRepo.Create(&article)
 	if err != nil {
