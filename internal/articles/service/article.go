@@ -41,3 +41,8 @@ func (a *ArticleService) GetAll() ([]repository.Article, error) {
 func (a *ArticleService) GetID(id int) (repository.Article, error) {
 	return a.articleRepo.GetID(id)
 }
+
+// удаление статьи
+func (a *ArticleService) Delete(id int) error {
+	return a.articleRepo.Delete(id)
+}

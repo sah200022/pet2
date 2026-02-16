@@ -100,5 +100,32 @@ func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(article)
+}
 
+func (h *ArticleHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	_, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
+	if !ok {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Unauthorized"))
+		return
+	}
+	path := r.URL.Path
+	idStr := strings.TrimPrefix(path, "/delete/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Invalid ID"))
+		return
+	}
+	err = h.articleService.Delete(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Not Found"))
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }

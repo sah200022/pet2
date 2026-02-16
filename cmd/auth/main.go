@@ -39,6 +39,7 @@ func main() {
 	mux.Handle("/article/create", middleware.JWTMiddleware(http.HandlerFunc(articleHandler.Create)))
 	mux.HandleFunc("/articles", articleHandler.GetAll)
 	mux.HandleFunc("/articles/", articleHandler.GetID)
+	mux.Handle("/delete/", middleware.JWTMiddleware(http.HandlerFunc(articleHandler.Delete)))
 
 	//Запуск сервера
 	fmt.Println("Запуск сервера")

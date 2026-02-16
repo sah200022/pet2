@@ -83,5 +83,16 @@ func (a *ArticleRepository) GetAll() ([]Article, error) {
 		return nil, err
 	}
 	return articles, nil
+}
 
+// удалить статью по id
+func (a *ArticleRepository) Delete(id int) error {
+	query := `
+	DELETE FROM articles WHERE id = $1;
+`
+	_, err := a.db.Exec(context.Background(), query, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
