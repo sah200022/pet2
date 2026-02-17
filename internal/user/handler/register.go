@@ -2,7 +2,7 @@ package handler
 
 import (
 	"PetProject/internal/middleware"
-	"PetProject/internal/service"
+	"PetProject/internal/user/service"
 	"encoding/json"
 	"net/http"
 	"strconv"

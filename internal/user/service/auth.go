@@ -1,7 +1,7 @@
 package service
 
 import (
-	"PetProject/internal/repository"
+	"PetProject/internal/user/repository"
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"time"
