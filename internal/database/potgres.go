@@ -6,9 +6,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func NewPostgresPool() (*pgxpool.Pool, error) {
+func NewPostgresPool(dbURL string) (*pgxpool.Pool, error) {
 	ctx := context.Background()
-	connURL := "postgres://postgres:123@localhost:5432/petproject"
+	connURL := dbURL
 
 	pool, err := pgxpool.New(ctx, connURL)
 	if err != nil {

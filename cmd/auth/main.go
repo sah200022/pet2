@@ -4,6 +4,7 @@ import (
 	handler2 "PetProject/internal/articles/handler"
 	repository2 "PetProject/internal/articles/repository"
 	service2 "PetProject/internal/articles/service"
+	"PetProject/internal/config"
 	"PetProject/internal/database"
 	"PetProject/internal/middleware"
 	"PetProject/internal/user/handler"
@@ -18,8 +19,10 @@ import (
 
 func main() {
 
+	cfg := config.Load()
+
 	//Подключение к БД
-	dbPool, err := database.NewPostgresPool()
+	dbPool, err := database.NewPostgresPool(cfg.DB_URL)
 	if err != nil {
 		log.Fatal(err, "Failed to connect to DB")
 	}
@@ -37,11 +40,13 @@ func main() {
 	articleService := service2.NewArticleService(articleRepo)
 	articleHandler := handler2.NewArticleHandler(articleService)
 
+	jwtMiddleware := middleware.JWTMiddleware([]byte(cfg.JWT_SECRET))
+
 	//Auth
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/register", authHandler.Register)
 		r.Post("/login", authHandler.Login)
-		r.With(middleware.JWTMiddleware).Get("/me", authHandler.Me)
+		r.With(jwtMiddleware).Get("/me", authHandler.Me)
 	})
 
 	//Articles
@@ -50,13 +55,13 @@ func main() {
 		r.Get("/", articleHandler.GetAll)
 		r.Get("/{id}", articleHandler.GetID)
 
-		r.With(middleware.JWTMiddleware).Post("/create", articleHandler.Create)
-		r.With(middleware.JWTMiddleware).Delete("/{id}", articleHandler.Delete)
+		r.With(jwtMiddleware).Post("/create", articleHandler.Create)
+		r.With(jwtMiddleware).Delete("/{id}", articleHandler.Delete)
 	})
 
 	//Запуск сервера
 	fmt.Println("Запуск сервера")
-	err = http.ListenAndServe(":8081", r)
+	err = http.ListenAndServe(":"+cfg.Port, r)
 	if err != nil {
 		fmt.Println("ошибка запуска сервера", err)
 	}
