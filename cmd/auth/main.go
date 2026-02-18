@@ -1,9 +1,9 @@
 package main
 
 import (
-	handler2 "PetProject/internal/articles/handler"
-	repository2 "PetProject/internal/articles/repository"
-	service2 "PetProject/internal/articles/service"
+	ArticleHandler "PetProject/internal/articles/handler"
+	ArticleRepository "PetProject/internal/articles/repository"
+	ArticleService "PetProject/internal/articles/service"
 	"PetProject/internal/config"
 	"PetProject/internal/database"
 	"PetProject/internal/middleware"
@@ -12,7 +12,7 @@ import (
 	"PetProject/internal/user/service"
 	"fmt"
 	"github.com/go-chi/chi/v5"
-	middleware2 "github.com/go-chi/chi/v5/middleware"
+	JWT_Middleware "github.com/go-chi/chi/v5/middleware"
 	"log"
 	"net/http"
 )
@@ -29,16 +29,16 @@ func main() {
 	defer dbPool.Close()
 
 	r := chi.NewRouter()
-	r.Use(middleware2.Logger)
-	r.Use(middleware2.Recoverer)
+	r.Use(JWT_Middleware.Logger)
+	r.Use(JWT_Middleware.Recoverer)
 
 	userRepo := repository.NewUserRepository(dbPool)
-	authService := service.NewAuthService(userRepo)
+	authService := service.NewAuthService(userRepo, []byte(cfg.JWT_SECRET))
 	authHandler := handler.NewAuthHandler(authService)
 
-	articleRepo := repository2.NewArticleRepository(dbPool)
-	articleService := service2.NewArticleService(articleRepo)
-	articleHandler := handler2.NewArticleHandler(articleService)
+	articleRepo := ArticleRepository.NewArticleRepository(dbPool)
+	articleService := ArticleService.NewArticleService(articleRepo)
+	articleHandler := ArticleHandler.NewArticleHandler(articleService)
 
 	jwtMiddleware := middleware.JWTMiddleware([]byte(cfg.JWT_SECRET))
 
