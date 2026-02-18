@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
@@ -17,11 +18,17 @@ func JWTMiddleware(next http.Handler) http.Handler {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": "Unauthorized",
+			})
 			return
 		}
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
 			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": "Unauthorized",
+			})
 			return
 		}
 		tokenStr := parts[1]
@@ -31,11 +38,17 @@ func JWTMiddleware(next http.Handler) http.Handler {
 		})
 		if err != nil || !token.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": "Unauthorized",
+			})
 			return
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
 			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": "Unauthorized",
+			})
 			return
 		}
 		fmt.Println("Authorization header", r.Header.Get("Authorization"))
