@@ -4,9 +4,9 @@ import (
 	"PetProject/internal/articles/service"
 	"PetProject/internal/middleware"
 	"encoding/json"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 type ArticleRequest struct {
@@ -29,10 +29,7 @@ func NewArticleHandler(articleService *service.ArticleService) *ArticleHandler {
 }
 
 func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+
 	w.Header().Set("Content-Type", "application/json")
 	var article ArticleRequest
 	if err := json.NewDecoder(r.Body).Decode(&article); err != nil {
@@ -65,10 +62,6 @@ func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
 	w.Header().Set("Content-Type", "application/json")
 
 	articles, err := h.articleService.GetAll()
@@ -85,12 +78,7 @@ func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if r.Method != http.MethodGet {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-	path := r.URL.Path
-	idStr := strings.TrimPrefix(path, "/articles/")
+	idStr := chi.URLParam(r, "id")
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -113,10 +101,7 @@ func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ArticleHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodDelete {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
+
 	_, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -125,8 +110,9 @@ func (h *ArticleHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	path := r.URL.Path
-	idStr := strings.TrimPrefix(path, "/delete/")
+
+	idStr := chi.URLParam(r, "id")
+
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
