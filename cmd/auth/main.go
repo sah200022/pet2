@@ -10,6 +10,8 @@ import (
 	"PetProject/internal/user/repository"
 	"PetProject/internal/user/service"
 	"fmt"
+	"github.com/go-chi/chi/v5"
+	middleware2 "github.com/go-chi/chi/v5/middleware"
 	"log"
 	"net/http"
 )
@@ -23,7 +25,10 @@ func main() {
 	}
 	defer dbPool.Close()
 
-	mux := http.NewServeMux()
+	r := chi.NewRouter()
+	r.Use(middleware2.Logger)
+	r.Use(middleware2.Recoverer)
+
 	userRepo := repository.NewUserRepository(dbPool)
 	authService := service.NewAuthService(userRepo)
 	authHandler := handler.NewAuthHandler(authService)
@@ -32,18 +37,26 @@ func main() {
 	articleService := service2.NewArticleService(articleRepo)
 	articleHandler := handler2.NewArticleHandler(articleService)
 
-	//Хэндлеры
-	mux.HandleFunc("/register", authHandler.Register)
-	mux.HandleFunc("/login", authHandler.Login)
-	mux.Handle("/me", middleware.JWTMiddleware(http.HandlerFunc(authHandler.Me)))
-	mux.Handle("/article/create", middleware.JWTMiddleware(http.HandlerFunc(articleHandler.Create)))
-	mux.HandleFunc("/articles", articleHandler.GetAll)
-	mux.HandleFunc("/articles/", articleHandler.GetID)
-	mux.Handle("/delete/", middleware.JWTMiddleware(http.HandlerFunc(articleHandler.Delete)))
+	//Auth
+	r.Route("/auth", func(r chi.Router) {
+		r.Post("/register", authHandler.Register)
+		r.Post("/login", authHandler.Login)
+		r.With(middleware.JWTMiddleware).Get("/me", authHandler.Me)
+	})
+
+	//Articles
+	r.Route("/articles", func(r chi.Router) {
+
+		r.Get("/", articleHandler.GetAll)
+		r.Get("/{id}", articleHandler.GetID)
+
+		r.With(middleware.JWTMiddleware).Post("/create", articleHandler.Create)
+		r.With(middleware.JWTMiddleware).Delete("/{id}", articleHandler.Delete)
+	})
 
 	//Запуск сервера
 	fmt.Println("Запуск сервера")
-	err = http.ListenAndServe(":8081", mux)
+	err = http.ListenAndServe(":8081", r)
 	if err != nil {
 		fmt.Println("ошибка запуска сервера", err)
 	}

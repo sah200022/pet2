@@ -3,7 +3,6 @@ package middleware
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"strings"
@@ -51,8 +50,15 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			})
 			return
 		}
-		fmt.Println("Authorization header", r.Header.Get("Authorization"))
-		userID := int(claims["user_id"].(float64))
+		//fmt.Println("Authorization header", r.Header.Get("Authorization"))
+		userIDFloat, ok := claims["user_id"].(float64)
+		if !ok {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{
+				"error": "Invalid token claims",
+			})
+		}
+		userID := int(userIDFloat)
 		ctx := context.WithValue(r.Context(), ContextKeyUserID, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
