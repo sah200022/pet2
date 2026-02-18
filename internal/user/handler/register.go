@@ -43,7 +43,9 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("JSON Decode Error"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "JSON Decode Error",
+		})
 		return
 	}
 
@@ -72,7 +74,9 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var login LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&login); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("JSON Decode Error"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "JSON Decode Error",
+		})
 		return
 	}
 
@@ -95,6 +99,9 @@ func (h *AuthHandler) Me(w http.ResponseWriter, r *http.Request) {
 	user_id, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Unauthorized",
+		})
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{

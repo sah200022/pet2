@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="65fab758-9309-416c-8494-1259f05b7bce" name="Changes" comment="MR conflict sql workspace to main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/auth/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/auth/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/handler/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/user/handler/register.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/repository/user_repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/user/repository/user_repository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/service/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/user/service/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/articles/handler/article_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/articles/handler/article_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/jwt_middleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/middleware/jwt_middleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/user/handler/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/user/handler/register.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +57,7 @@
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "Newstruct",
+    "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "last_opened_file_path": "/Users/sahautdinov",
     "node.js.detected.package.eslint": "true",
@@ -69,9 +68,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/internal/user/handler" />
+      <recent name="$PROJECT_DIR$/internal/user/repository" />
+      <recent name="$PROJECT_DIR$/internal/user/service" />
       <recent name="$PROJECT_DIR$/internal" />
       <recent name="$PROJECT_DIR$/cmd/auth" />
-      <recent name="$PROJECT_DIR$/cmd" />
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build PetProject/cmd/auth">

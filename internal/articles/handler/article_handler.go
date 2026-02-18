@@ -37,13 +37,17 @@ func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var article ArticleRequest
 	if err := json.NewDecoder(r.Body).Decode(&article); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Json Decode Error"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Json Decode Error",
+		})
 		return
 	}
 	userID, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Unauthorized"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Unauthorized",
+		})
 		return
 	}
 	err := h.articleService.Create(article.Title, article.Text, userID)
@@ -70,7 +74,9 @@ func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	articles, err := h.articleService.GetAll()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal Server Error"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Internal Server Error",
+		})
 		return
 	}
 	json.NewEncoder(w).Encode(articles)
@@ -89,14 +95,18 @@ func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid ID"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Invalid ID",
+		})
 		return
 	}
 
 	article, err := h.articleService.GetID(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Not Found"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Not Found",
+		})
 		return
 	}
 	json.NewEncoder(w).Encode(article)
@@ -110,7 +120,9 @@ func (h *ArticleHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	_, ok := r.Context().Value(middleware.ContextKeyUserID).(int)
 	if !ok {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Unauthorized"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Unauthorized",
+		})
 		return
 	}
 	path := r.URL.Path
@@ -118,13 +130,17 @@ func (h *ArticleHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid ID"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Invalid ID",
+		})
 		return
 	}
 	err = h.articleService.Delete(id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Not Found"))
+		json.NewEncoder(w).Encode(map[string]string{
+			"error": "Not Found",
+		})
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
