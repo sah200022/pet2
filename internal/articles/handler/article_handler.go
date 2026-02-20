@@ -62,9 +62,23 @@ func (h *ArticleHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 
+	pageStr := r.URL.Query().Get("page")
+	limitStr := r.URL.Query().Get("limit")
+
+	page := 1
+	limit := 10
+
+	if p, err := strconv.Atoi(pageStr); err == nil && p > 0 {
+		page = p
+	}
+
+	if l, err := strconv.Atoi(limitStr); err == nil && l > 0 && l <= 100 {
+		limit = l
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
-	articles, err := h.articleService.GetAll()
+	articles, total, err := h.articleService.GetAll(page, limit)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{
@@ -72,7 +86,13 @@ func (h *ArticleHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	json.NewEncoder(w).Encode(articles)
+	response := map[string]interface{}{
+		"data":  articles,
+		"page":  page,
+		"limit": limit,
+		"total": total,
+	}
+	json.NewEncoder(w).Encode(response)
 }
 
 func (h *ArticleHandler) GetID(w http.ResponseWriter, r *http.Request) {

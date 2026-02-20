@@ -33,8 +33,10 @@ func (a *ArticleService) Create(title string, text string, userID int) error {
 }
 
 // получение всех статей
-func (a *ArticleService) GetAll() ([]repository.Article, error) {
-	return a.articleRepo.GetAll()
+func (a *ArticleService) GetAll(page, limit int) ([]repository.Article, int, error) {
+	offset := (page - 1) * limit
+
+	return a.articleRepo.GetAll(limit, offset)
 }
 
 // получение статьи по id

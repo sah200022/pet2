@@ -58,31 +58,43 @@ func (a *ArticleRepository) GetID(id int) (Article, error) {
 }
 
 // показать все статьи
-func (a *ArticleRepository) GetAll() ([]Article, error) {
-	query := `
+func (a *ArticleRepository) GetAll(limit, offset int) ([]Article, int, error) {
+	var articles []Article
+	var total int
+
+	ArticleQuery := `
 	SELECT id, title, text, author_id
-	FROM articles;
+	FROM articles
+	ORDER BY id DESC LIMIT $1 OFFSET $2;
 `
-	rows, err := a.db.Query(context.Background(), query)
+	countQuery := `
+SELECT COUNT(*)
+FROM articles
+`
+	err := a.db.QueryRow(context.Background(), countQuery).Scan(&total)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
+	}
+
+	rows, err := a.db.Query(context.Background(), ArticleQuery, limit, offset)
+	if err != nil {
+		return nil, 0, err
 	}
 	defer rows.Close()
-	var articles []Article
 	for rows.Next() {
 		var article Article
 		err := rows.Scan(
 			&article.ID, &article.Title, &article.Text, &article.AuthorID,
 		)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		articles = append(articles, article)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return articles, nil
+	return articles, total, nil
 }
 
 // удалить статью по id
